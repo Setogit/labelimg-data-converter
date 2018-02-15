@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import argparse, glob, os, shutil
+import argparse, glob, os, re, shutil
 from random import random
 import xml.etree.ElementTree as ET
 
@@ -160,7 +160,7 @@ class MetaData(object):
       root = tree.getroot()
       assert(root.tag == 'annotation') # validate the root tag of the input XML
       img_width = None # width of the image in pixels (int)
-      img_height = None # height of th eimage in pixels (int)
+      img_height = None # height of the image in pixels (int)
       for size in root.iter('size'): # search for "size" node underneath root
         assert(int(size.find('depth').text) == 3) # validate that the depth is 3
         assert(img_width == None) # there must be only one img_width defined in the xml
@@ -299,13 +299,13 @@ def parse_args():
   global source_dir, destination_dir, dest_subdir, dest_file_name_header
   global percentage_test
 
-  parser = argparse.ArgumentParser(usage='python labelimg_data_converter.py <comma delimited list of classs names> such as "cat,dog,horse,pig"', 
+  parser = argparse.ArgumentParser(usage='python labelimg_data_converter.py <comma delimited list of class names> such as "cat,dog,horse,pig"', 
     description='Converts labelimg meta data to yolo meta data. \
 The original image files (*.jpg) and lalbelimg meta data XML files (*.xml) \
 must exist in sub-directories named "movie<M_ID>" where <M_ID> is \
 an positive integer number.  \
 In the sub-directories, the jpg and xml files must exist with file names \
-as "frame<F_ID>.jpg" and "frame<F_ID>.xml where <F_ID> is either \
+as "frame<F_ID>.jpg" and "frame<F_ID>.xml" where <F_ID> is either \
 3- or 4-digit number.  For example, <source_dir>/movie1/frame001.xml \
 or <source_dir>/movie123456/frame1234.xml')
   parser.add_argument('classes', action='store', type=str,
@@ -333,7 +333,7 @@ or <source_dir>/movie123456/frame1234.xml')
   parser.add_argument('-e', '--header', action='store', type=str, default='sample',
                       dest='header',
                       help='string used as header of the generated yolo meta data TXT file names.  \
-                      default: "header"')
+                      default: "sample"')
   parser.add_argument('-p', '--percentage_test', action='store', type=float,
                       choices=[Range(0.0, 1.0)], default=0.1, dest='percent',
                       help='float number between 0.0 and 1.0 exclusive to specify the amount of \
@@ -348,6 +348,7 @@ or <source_dir>/movie123456/frame1234.xml')
   percentage_test = args.percent
   assert(args.classes != None)
   classes = {}
+  args.classes = re.sub('[\s+]', '', args.classes)
   for i,v in enumerate(args.classes.split(',')):
     classes[v] = i
 

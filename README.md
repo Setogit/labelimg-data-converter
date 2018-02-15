@@ -34,7 +34,7 @@ optional arguments:
                         beneath the destination directory. default: "data"
   -e HEADER, --header HEADER
                         string used as header of the generated yolo meta data
-                        TXT file names. default: "header"
+                        TXT file names. default: "sample"
   -p {(0.0 .. 1.0) exclusive}, --percentage_test {(0.0 .. 1.0) exclusive}
                         float number between 0.0 and 1.0 exclusive to specify
                         the amount of labeled images to be used for validation
