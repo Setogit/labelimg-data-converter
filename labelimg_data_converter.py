@@ -309,11 +309,9 @@ as "frame<F_ID>.jpg" and "frame<F_ID>.xml" where <F_ID> is either \
 3- or 4-digit number.  For example, <source_dir>/movie1/frame001.xml \
 or <source_dir>/movie123456/frame1234.xml')
   parser.add_argument('classes', action='store', type=str,
-                      help='[REQUIRED] a comma delimited list of class names; \
-                      THE ORDER IS IMPORTANT because the 0-based index is used as \
-                      class id in the model. \
-                      e.g., cat,dog,horse,pig is translated as \
-                      {"cat": 0, "dog": 1, "horse": 2, "pig": 3}')
+                      help='[REQUIRED] a comma delimited list of class_name:class_id pairs. \
+                      e.g., dog:1,cat:0,horse:3,pig:5 is translated to \
+                      {"cat": 0, "dog": 1, "horse": 3, "pig": 5}')
   parser.add_argument('-s', '--source', action='store', type=str, default='source',
                       dest='src',
                       help='directory where the original labelimg meta data XML \
@@ -350,7 +348,9 @@ or <source_dir>/movie123456/frame1234.xml')
   classes = {}
   args.classes = re.sub('[\s+]', '', args.classes)
   for i,v in enumerate(args.classes.split(',')):
-    classes[v] = i
+    kv = v.split(':')
+    assert(len(kv) == 2)
+    classes[kv[0]] = int(kv[1])
 
 
 if __name__ == "__main__":

@@ -14,11 +14,10 @@ number. For example, <source_dir>/movie1/frame001.xml or
 <source_dir>/movie123456/frame1234.xml
 
 positional arguments:
-  classes               [REQUIRED] a comma delimited list of class names; THE
-                        ORDER IS IMPORTANT because the 0-based index is used
-                        as class id in the model. e.g., cat,dog,horse,pig is
-                        translated as {"cat": 0, "dog": 1, "horse": 2, "pig":
-                        3}
+  classes               [REQUIRED] a comma delimited list of
+                        class_name:class_id pairs. e.g.,
+                        dog:1,cat:0,horse:3,pig:5 is translated to {"cat": 0,
+                        "dog": 1, "horse": 3, "pig": 5}
 
 optional arguments:
   -h, --help            show this help message and exit
