@@ -15,9 +15,10 @@ number. For example, <source_dir>/movie1/frame001.xml or
 
 positional arguments:
   classes               [REQUIRED] a comma delimited list of
-                        class_name:class_id pairs. e.g.,
-                        dog:1,cat:0,horse:3,pig:5 is translated to {"cat": 0,
-                        "dog": 1, "horse": 3, "pig": 5}
+                        class_name:class_id pairs. space characters are
+                        preserved. e.g., "dog:1,cat:0,horse:3,peter rabbit:5"
+                        is translated to {"cat": 0, "dog": 1, "horse": 3,
+                        "peter rabbit": 5}
 
 optional arguments:
   -h, --help            show this help message and exit

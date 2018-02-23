@@ -310,8 +310,9 @@ as "frame<F_ID>.jpg" and "frame<F_ID>.xml" where <F_ID> is either \
 or <source_dir>/movie123456/frame1234.xml')
   parser.add_argument('classes', action='store', type=str,
                       help='[REQUIRED] a comma delimited list of class_name:class_id pairs. \
-                      e.g., dog:1,cat:0,horse:3,pig:5 is translated to \
-                      {"cat": 0, "dog": 1, "horse": 3, "pig": 5}')
+                      space characters are preserved. e.g., \
+                      "dog:1,cat:0,horse:3,peter rabbit:5" is translated to \
+                      {"cat": 0, "dog": 1, "horse": 3, "peter rabbit": 5}')
   parser.add_argument('-s', '--source', action='store', type=str, default='source',
                       dest='src',
                       help='directory where the original labelimg meta data XML \
@@ -346,7 +347,6 @@ or <source_dir>/movie123456/frame1234.xml')
   percentage_test = args.percent
   assert(args.classes != None)
   classes = {}
-  args.classes = re.sub('[\s+]', '', args.classes)
   for i,v in enumerate(args.classes.split(',')):
     kv = v.split(':')
     assert(len(kv) == 2)
