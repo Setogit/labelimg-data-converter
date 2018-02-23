@@ -162,7 +162,7 @@ class MetaData(object):
       img_width = None # width of the image in pixels (int)
       img_height = None # height of the image in pixels (int)
       for size in root.iter('size'): # search for "size" node underneath root
-        assert(int(size.find('depth').text) == 3) # validate that the depth is 3
+        # assert(int(size.find('depth').text) == 3) # don't care depth
         assert(img_width == None) # there must be only one img_width defined in the xml
         img_width = int(size.find('width').text)
         assert(img_height == None) # there must be only one img_width defined in the xml
@@ -181,11 +181,11 @@ class MetaData(object):
         for bndbox in obj.iter('bndbox'): # search for "bndbox" node underneath the object node
           # read the four integer values from the object node in XML
           xmin = int(bndbox.find('xmin').text)
-          assert(xmin > 0)
+          assert(xmin >= 0)
           xmax = int(bndbox.find('xmax').text)
           assert(xmax > 0)
           ymin = int(bndbox.find('ymin').text)
-          assert(ymin > 0)
+          assert(ymin >= 0)
           ymax = int(bndbox.find('ymax').text)
           assert(ymax > 0)
           abs_width = float(xmax - xmin) # width of the annotated object
