@@ -24,6 +24,7 @@
 
 import argparse, glob, os, re, shutil
 from random import random
+from types import *
 import xml.etree.ElementTree as ET
 
 parser = None
@@ -78,6 +79,7 @@ class ImageData(object):
       returns a string of sanitized version of 4-digit id, for example, if xml ends with
       frame1425.xml, sanitize_id returns 1425.  In case sanitize_id is frame023.xml, returns 0023.
       """
+      assert(type(xml) is StringType)
       xml_id = xml[-8:].split('.xml')[0]
       if not xml_id.isdigit():
         xml_id = '0' + xml_id[1:]
@@ -152,6 +154,7 @@ class MetaData(object):
       return True if one or more objects are defined in the XML
       return False if no valid objects are found
       """
+      assert(type(xml) is StringType)
       txt_path, ext = os.path.splitext(xml)
       assert(ext == '.xml')
       assert(txt_path != '')
@@ -299,7 +302,7 @@ def parse_args():
   global source_dir, destination_dir, dest_subdir, dest_file_name_header
   global percentage_test
 
-  parser = argparse.ArgumentParser(usage='python labelimg_data_converter.py <comma delimited list of class names> such as "cat,dog,horse,pig"', 
+  parser = argparse.ArgumentParser(usage='python labelimg_data_converter.py <comma delimited list of class_name:class_id pairs> such as "dog:1,cat:0,horse:3,peter rabbit:5"',
     description='Converts labelimg meta data to yolo meta data. \
 The original image files (*.jpg) and lalbelimg meta data XML files (*.xml) \
 must exist in sub-directories named "movie<M_ID>" where <M_ID> is \
@@ -349,7 +352,11 @@ or <source_dir>/movie123456/frame1234.xml')
   classes = {}
   for i,v in enumerate(args.classes.split(',')):
     kv = v.split(':')
-    assert(len(kv) == 2)
+    assert len(kv) == 2, \
+      '"%s" must be a colon-separated key-value pair such as "dog:1"' % v
+    kv = map(lambda s: s.strip(), kv)
+    assert kv[1].isdigit() and int(kv[1]) >= 0, \
+      'class_id "%s" must be a non-negative integer' % kv[1]
     classes[kv[0]] = int(kv[1])
 
 
